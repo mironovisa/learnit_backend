@@ -8,12 +8,24 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+let isMongoDBConnected = false;
+
 // Connect to MongoDB
-connectDB();
+connectDB()
+  .then(() => {
+    isMongoDBConnected = true;
+  })
+  .catch((error) => {
+    console.error("Error connecting to MongoDB:", error);
+  });
 
 // Define a route
 app.get("/", (req, res) => {
-  res.send("Hello, Heroku World!");
+  if (isMongoDBConnected) {
+    res.send("Connected to MongoDB and Hello, Heroku World!");
+  } else {
+    res.send("Hello, Heroku World!");
+  }
 });
 
 // Start the server
