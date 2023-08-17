@@ -3,7 +3,7 @@ const axios = require("axios");
 const sendMessage = async (req, res) => {
   const { message } = req.body;
   const chatId = message.chat.id;
-  const reply = "Hello, you said: " + message.text;
+  let reply = "Hello, you said: " + message.text;
 
   // Set up the Telegram Bot API endpoint and token
   const botToken = "6414301028:AAG0z_Mu3c5gfpWUsO3nkCgPARgS4ebkoVU"; // Replace with your actual bot token
@@ -15,37 +15,36 @@ const sendMessage = async (req, res) => {
         "https://young-gorge-91386-003fa2ea2657.herokuapp.com/datagen/onefortoday"
       );
       const data = response.data;
+
       // Process the data and send a reply back to the user
-      const reply = "Here is your daily story: " + data;
-      // Send the reply using the Telegram Bot API
-      await sendTelegramMessage(chatId, reply);
-      res.status(200).end();
+      if (data && data.hebrewStory) {
+        reply = "Here is your daily story: " + data.hebrewStory;
+
+        // Send the reply using the Telegram Bot API
+        await axios.post(apiUrl, {
+          chat_id: chatId,
+          text: reply,
+        });
+      } else {
+        reply = "Sorry, no daily story available.";
+        await axios.post(apiUrl, {
+          chat_id: chatId,
+          text: reply,
+        });
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
-      res.status(500).json({ error: "An error occurred" });
+      reply = "An error occurred while fetching the data.";
+      await axios.post(apiUrl, {
+        chat_id: chatId,
+        text: reply,
+      });
     }
-  } else {
-    // Handle other messages or commands
-    res.status(200).end();
   }
+
+  res.status(200).end();
 };
 
 module.exports = {
   sendMessage,
 };
-
-// try {
-//     // Send the reply using the Telegram Bot API
-//     const response = await axios.post(apiUrl, {
-//       chat_id: chatId,
-//       text: reply,
-//     });
-
-//     if (response.status === 200) {
-//       console.log("Reply sent successfully:", reply);
-//     } else {
-//       console.error("Failed to send reply:", reply);
-//     }
-//   } catch (error) {
-//     console.error("Error sending reply:", error);
-//   }
