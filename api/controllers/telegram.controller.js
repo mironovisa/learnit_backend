@@ -12,7 +12,7 @@ const sendMessage = async (req, res) => {
   if (message.text === "onefortoday") {
     try {
       const response = await axios.get(
-        "https://your-heroku-app-url/datagen/onefortoday"
+        "https://young-gorge-91386-003fa2ea2657.herokuapp.com/datagen/onefortoday"
       );
       const data = response.data;
       // Process the data and send a reply back to the user
