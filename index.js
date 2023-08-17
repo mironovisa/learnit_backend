@@ -1,5 +1,6 @@
 const express = require("express");
 const connectDB = require("./config/db");
+const datagenRoutes = require("./api/routes/datagen.route");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -7,6 +8,7 @@ const port = process.env.PORT || 3000;
 // Set up middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/datagen", datagenRoutes);
 
 let isMongoDBConnected = false;
 
