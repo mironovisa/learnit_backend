@@ -14,8 +14,7 @@ let isMongoDBConnected = false;
 
 // Connect to MongoDB
 connectDB()
-  .then((dbConnection) => {
-    // Store the connection object here
+  .then(() => {
     isMongoDBConnected = true;
   })
   .catch((error) => {
@@ -23,31 +22,13 @@ connectDB()
   });
 
 // Define a route
-app.get("/", async (req, res) => {
-  try {
-    const isConnected = await checkMongoDBConnection();
-
-    if (isConnected) {
-      res.send("Connected to MongoDB and Hello, Heroku World!");
-    } else {
-      res.send("Hello, Heroku World! Could not connect to MongoDB.");
-    }
-  } catch (error) {
-    console.error("Error checking MongoDB connection:", error);
-    res.send("Hello, Heroku World! An error occurred.");
+app.get("/", (req, res) => {
+  if (isMongoDBConnected) {
+    res.send("Connected to MongoDB and Hello, Heroku World!");
+  } else {
+    res.send("Hello, Heroku World!");
   }
 });
-
-// Check MongoDB Connection
-const checkMongoDBConnection = async () => {
-  try {
-    const dbConnection = await connectDB();
-    return dbConnection.readyState === 1;
-  } catch (error) {
-    console.error("Error checking MongoDB connection:", error);
-    return false;
-  }
-};
 
 // Start the server
 app.listen(port, () => {
