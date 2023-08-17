@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const datagenRoutes = require("./api/routes/datagen.route");
+const telegramRoutes = require("./api/routes/telegram.route");
 const cors = require("cors");
 const corsOptions = {
   origin: "*",
@@ -16,6 +17,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/datagen", datagenRoutes);
+app.use("/telegram", telegramRoutes);
 
 let isMongoDBConnected = false;
 

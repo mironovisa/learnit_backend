@@ -27,6 +27,7 @@
     "fs": "^0.0.1-security",
     "got": "^13.0.0",
     "mongoose": "^7.4.3",
+    "node-telegram-bot-api": "^0.61.0",
     "nodemon": "^3.0.1",
     "openai": "^3.3.0",
     "stream-promise": "^3.2.0"
