@@ -72,4 +72,27 @@ async function runCompletion(req, res) {
   }
 }
 
-module.exports = { runCompletion };
+async function generateStoryStep1() {
+  const completion = await openai.createChatCompletion({
+    model: "gpt-4",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a helpful assistant that generates stories in Russian about life in Israel. You generate simple, but interesting stories. You take care that the details of your story aren't too complicated. ",
+      },
+      {
+        role: "user",
+        content:
+          "You have to generate a 3-sentence story in Russian. The story should be very simple for kids of age 7-9, who have only started to prepare for their immigration to Israel. The story should be complete and interesting. It should be about simple things, people with Jewish names, locations in Israel, foods, and traditions. It should never be a lie; it should operate only on proven facts. It should always be lifelike and full of love. No more than 300 words in total.",
+      },
+    ],
+    max_tokens: 600,
+  });
+
+  const generatedText = completion.data.choices[0].message.content;
+
+  return generatedText;
+}
+
+module.exports = { runCompletion, generateStoryStep1 };

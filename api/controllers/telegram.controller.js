@@ -9,7 +9,7 @@ const sendMessage = async (req, res) => {
   const botToken = "6414301028:AAG0z_Mu3c5gfpWUsO3nkCgPARgS4ebkoVU"; // Replace with your actual bot token
   const apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
-  if (message.text === "onefortoday") {
+  if (message.text === "/onefortoday") {
     try {
       const response = await axios.get(
         "https://young-gorge-91386-003fa2ea2657.herokuapp.com/datagen/onefortoday"
@@ -27,6 +27,37 @@ const sendMessage = async (req, res) => {
         });
       } else {
         reply = "Sorry, no daily story available.";
+        await axios.post(apiUrl, {
+          chat_id: chatId,
+          text: reply,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      reply = "An error occurred while fetching the data.";
+      await axios.post(apiUrl, {
+        chat_id: chatId,
+        text: reply,
+      });
+    }
+  } else if (message.text === "generatestoryrus") {
+    try {
+      const response = await axios.get(
+        "https://young-gorge-91386-003fa2ea2657.herokuapp.com/datagen/generatestoryrus"
+      );
+      const data = response.data;
+
+      // Process the data and send a reply back to the user
+      if (data && data.generatedText) {
+        reply = "Here is a generated story: " + data.generatedText;
+
+        // Send the reply using the Telegram Bot API
+        await axios.post(apiUrl, {
+          chat_id: chatId,
+          text: reply,
+        });
+      } else {
+        reply = "Sorry, could not generate a story.";
         await axios.post(apiUrl, {
           chat_id: chatId,
           text: reply,
